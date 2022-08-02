@@ -160,7 +160,7 @@ public class CharacterController2D : MonoBehaviour
 			}
 		}
 		// If the player should jump...
-		if ((m_Grounded || BypassGrounded) && jump)
+		if (jump)
 		{
 			// Add a vertical force to the player.
 			m_Grounded = false;
@@ -179,7 +179,7 @@ public class CharacterController2D : MonoBehaviour
                 }
             }
 			_coyoteTimer = -1;
-			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce)	);
 		}
 	}
 

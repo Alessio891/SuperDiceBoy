@@ -211,14 +211,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-        PlayerInput input = GetComponent<PlayerInput>();
-        GUILayout.Label("Scheme: " + input.currentControlScheme);
-        GUILayout.Label("Never Autoswtch: " + input.neverAutoSwitchControlSchemes);
-        
-    }
-
     private void FixedUpdate()
     {    }
 

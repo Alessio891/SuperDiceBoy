@@ -30,9 +30,8 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform GroundCheck;
 
+    bool canJump = true;
     bool holdingJump = false;    
-    public float MaxJumpForce = 600.0f;
-    public float MinJumpForce = 200.0f;
     public float JumpChargeTime = 0.35f;
     float jumpChargeTimer = 0;
     float _jumpTimer = 0;
@@ -76,11 +75,37 @@ public class PlayerMovement : MonoBehaviour
             OnStopMoving.Invoke();
         }
     }
-
+    public void ResetJump()
+    {
+        jumpChargeTimer = 0;
+    }
     public void Jump(InputAction.CallbackContext ctx)
     {
         if (!gameObject.activeInHierarchy)
             return;
+        if (!holdingJump && !controller.Grounded && ctx.ReadValueAsButton())
+        {
+            PlayerController pc = GetComponent<PlayerController>();
+           
+            if (pc.Carrying && pc.nearDice != null)
+            {
+                SwingDie swing = pc.nearDice.GetComponent<SwingDie>();
+               
+                if (swing == null)
+                {
+                    return;
+                } else
+                {
+                    swing.Detach(pc);
+                    pc.Carrying = false;
+                    holdingJump = true;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
 
         if (!ctx.ReadValueAsButton())
         {
@@ -88,9 +113,16 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            if (!canJump)
+                return;
+            if (canJump)
+                canJump = false;
             if (jumpChargeTimer < JumpChargeTime)
             {
                 holdingJump = true;
+            } else
+            {
+                holdingJump = false;
             }
         }
 
@@ -98,6 +130,11 @@ public class PlayerMovement : MonoBehaviour
         {
             _jumpTimer = JumpBufferTimer;            
         }
+    }
+
+    private void OnGUI()
+    {
+        GUILayout.Label("Jump timer: " + jumpChargeTimer);
     }
 
     protected virtual void Update()
@@ -113,7 +150,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         _jumpTimer -= Time.deltaTime;
-
+        if (holdingJump)
+        {
+            jumpChargeTimer += Time.deltaTime;
+            if (jumpChargeTimer >= JumpChargeTime)
+            {
+                holdingJump = false;
+            }
+            
+        }
     }
 
     void FixedUpdate()
@@ -121,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
         if (GameMenu.instance.Open)
             return;
 
-        jump = _jumpTimer > 0;
+        jump = holdingJump;//_jumpTimer > 0;
 
         controller.Move(horizontalMove*Time.fixedDeltaTime, false, jump);
         if (jump)
@@ -163,6 +208,8 @@ public class PlayerMovement : MonoBehaviour
             falling = false;
         if (climbing)
             climbing = false;
+        canJump = true;
+        jumpChargeTimer = 0;
         Debug.Log("Landed");
         animator.SetTrigger("Land");
 

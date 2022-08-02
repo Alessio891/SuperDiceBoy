@@ -288,7 +288,7 @@ public class MainMenuController : MonoBehaviour
         VolumeValue.text = volume.ToString();
         BgmValue.text = (bgm) ? "Enabled" : "Disabled";
         FullscreenValue.text = (fullScreen) ? "Yes" : "No";
-
+        Sfx.volume = MaxBGMVolume * (float)((float)volume / 10.0f); 
         if (bgm)
         {
             BGM.volume = MaxBGMVolume * (float)((float)volume / 10.0f);
@@ -314,6 +314,7 @@ public class MainMenuController : MonoBehaviour
         {
             volume++;
             BGM.volume = MaxBGMVolume * (float)((float)volume / 10.0f);
+            Sfx.volume = BGM.volume;
             PlayerPrefs.SetInt("Volume", volume);
             VolumeValue.text = volume.ToString();
         }
@@ -324,6 +325,7 @@ public class MainMenuController : MonoBehaviour
         {
             volume--;
             BGM.volume = MaxBGMVolume * (float)((float)volume / 10.0f);
+            Sfx.volume = BGM.volume;
             PlayerPrefs.SetInt("Volume", volume);
             VolumeValue.text = volume.ToString();
         }

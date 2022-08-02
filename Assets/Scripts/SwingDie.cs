@@ -23,6 +23,7 @@ public class SwingDie : DieController
     public override void OnPickup(PlayerController user)
     {
         user.transform.position = transform.position - transform.right * 0.5f - transform.up * 0.5f;
+        user.GetComponent<PlayerMovement>().ResetJump();
         Joint = gameObject.AddComponent<FixedJoint2D>();
         Joint.connectedBody = user.GetComponent<Rigidbody2D>();
         user.GetComponent<CharacterController2D>().BypassGrounded = true;
