@@ -14,6 +14,7 @@ public class BirbParticles : MonoBehaviour
     }
     private void Start()
     {
+        s.volume = s.volume * ((float)PlayerPrefs.GetInt("Volume", 10) / 10.0f);
         PlayerController.Player1.OnThrowDie += (d) =>
         {
             if (Vector3.Distance(PlayerController.Player1.transform.position, transform.position) < RangeReact)

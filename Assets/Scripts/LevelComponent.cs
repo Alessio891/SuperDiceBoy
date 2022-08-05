@@ -48,6 +48,10 @@ public class LevelComponent : MonoBehaviour
                 d.Thrown = 0;
             }
         }
+        foreach(MovingPlatform p in GetComponentsInChildren<MovingPlatform>())
+        {
+            p.Reset();
+        }
         PlayerController.Player1.transform.position = StartPos.position;
         if (PlayerController.Player2 != null)
         {

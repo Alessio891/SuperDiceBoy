@@ -25,7 +25,8 @@ public class Lava : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GetComponent<AudioSource>().volume = 0.5f * ((float)PlayerPrefs.GetInt("Volume", 10) / 10.0f);
+
     }
     float timer = -1;
     // Update is called once per frame

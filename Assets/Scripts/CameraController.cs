@@ -4,8 +4,8 @@ using UnityEngine;
 using Cinemachine;
 public class CameraController : MonoBehaviour
 {
-    public CinemachineVirtualCamera VirtualCam;
-
+    public CinemachineVirtualCamera VirtualCam, CloserCamera;
+    public CinemachineBrain Brain;
     public Transform GroupComposer;
 
     public float MinSize = 3.0f;
@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        Brain = GetComponent<CinemachineBrain>();
     }
     private void Start()
     {
@@ -61,5 +62,10 @@ public class CameraController : MonoBehaviour
               
 
         }*/
+    }
+
+    public void ToggleCloser()
+    {
+        CloserCamera.enabled = !CloserCamera.enabled;
     }
 }

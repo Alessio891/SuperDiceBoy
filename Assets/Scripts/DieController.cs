@@ -23,6 +23,7 @@ public class DieController : MonoBehaviour
     public int MaxThrown = 3;
 
     public bool DoNotReset = false;
+    public bool WillExplode = true;
     public virtual int Thrown
     {
         get
@@ -32,7 +33,7 @@ public class DieController : MonoBehaviour
         set
         {
             _thrown = value;
-            if (value < Colors.Count)
+            if (WillExplode && value < Colors.Count)
                 Sprite.color = Colors[value];
             /*switch(value)
             {                
@@ -70,6 +71,7 @@ public class DieController : MonoBehaviour
     {
         if (RegisterPos)
             originalPos = transform.position;
+        source.volume = source.volume * ((float)PlayerPrefs.GetInt("Volume", 10) / 10.0f);
     }
 
     // Update is called once per frame
@@ -173,7 +175,7 @@ public class DieController : MonoBehaviour
         CollisionMask = LayerMask.GetMask("Floor",  "Platform");
         if (CollisionMask == (CollisionMask | (1<<collision.gameObject.layer)))
         {
-            if (Thrown >= MaxThrown)
+            if (Thrown >= MaxThrown && WillExplode)
             {
                 DiceManager.instance.DieExploded(this);
                 DestroyAndRespawn();

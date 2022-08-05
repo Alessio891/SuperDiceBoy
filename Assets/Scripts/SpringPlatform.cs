@@ -27,6 +27,7 @@ public class SpringPlatform : MonoBehaviour
             DieSprite.sprite = Sprites[NeededNumber - 1];
         else
             DieSprite.enabled = false;
+        source.volume = source.volume * ((float)PlayerPrefs.GetInt("Volume", 10) / 10.0f);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

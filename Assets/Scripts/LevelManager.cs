@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour
     
     public int StartLevel = -1;
     public PlayerInputManager input;
+    public static bool FromMainMenu = false;
     public LevelComponent CurrentLevelComponent
     {
         get
@@ -36,7 +37,7 @@ public class LevelManager : MonoBehaviour
     {
         foreach (LevelComponent c in Levels)
             c.gameObject.SetActive(false);
-        if (StartLevel == -1)
+        if (FromMainMenu)
         {
             StartLevel = PlayerPrefs.GetInt("StartLevel", 0);
         }

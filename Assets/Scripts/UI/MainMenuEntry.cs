@@ -24,7 +24,7 @@ public class MainMenuEntry : MonoBehaviour, ISelectHandler, IDeselectHandler, IS
 
     public virtual void OnSelect(BaseEventData eventData)
     {
-        MainMenuController.instance.PlaySelectSound();
+      //  MainMenuController.instance.PlaySelectSound();
         transform.localScale = Vector3.one;
         gameObject.LeanScale(new Vector3(1.05f, 1.05f, 1.05f), 0.2f).setEaseOutSine();
     }

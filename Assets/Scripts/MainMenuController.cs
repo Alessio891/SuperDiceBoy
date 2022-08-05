@@ -207,6 +207,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void LoadNewScene(int levelIndex)
     {
+        LevelManager.FromMainMenu = true;
         PlayerPrefs.SetInt("StartLevel", levelIndex);
         SceneManager.LoadScene(1);
     }

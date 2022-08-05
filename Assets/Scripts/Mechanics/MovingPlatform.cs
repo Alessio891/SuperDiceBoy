@@ -11,11 +11,13 @@ public class MovingPlatform : MonoBehaviour
     float _timer = 0;
     Vector3 startPos;
     public MechanicDirection Direction = MechanicDirection.Horizontal;
+    MechanicDirection originalDir;
     public bool Continuos = true;
     bool Move = false;
     private void Start()
     {
         startPos = transform.position;
+        originalDir = Direction;
     }
     private void Update()
     {
@@ -56,6 +58,12 @@ public class MovingPlatform : MonoBehaviour
         }
         
     }
+
+    public void Reset()
+    {
+        transform.position = startPos;
+        Direction = originalDir;
+    }
     public void MovePlatform()
     {        
         Move = true;
@@ -85,7 +93,7 @@ public class MovingPlatform : MonoBehaviour
         } else
         {
             DieController d = collision.gameObject.GetComponent<DieController>();
-            if (d != null && d.GetComponent<Rigidbody2D>().simulated)
+            if (d != null && d.GetComponent<Rigidbody2D>().simulated && d.transform.parent.GetComponent<DoorSwitch>() == null)
             {
                 d.transform.SetParent(transform);
             } else

@@ -58,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
             OnLeaveGround = new UnityEvent();
         if (OnStartFall == null)
             OnStartFall = new UnityEvent();
+        source.volume = source.volume * ((float)PlayerPrefs.GetInt("Volume", 10) / 10.0f);
         
     }
 
@@ -130,11 +131,6 @@ public class PlayerMovement : MonoBehaviour
         {
             _jumpTimer = JumpBufferTimer;            
         }
-    }
-
-    private void OnGUI()
-    {
-        GUILayout.Label("Jump timer: " + jumpChargeTimer);
     }
 
     protected virtual void Update()

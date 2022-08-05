@@ -15,7 +15,7 @@ public class DoorSwitch : MonoBehaviour
     public bool SwitchOnContact = false;
     bool toggled = false;
     public UnityEvent OnActivate, OnDeactivate;
-
+    public bool ParentDie = false;
     private void Awake()
     {
         source = GetComponent<AudioSource>();
@@ -27,6 +27,8 @@ public class DoorSwitch : MonoBehaviour
             OnActivate = new UnityEvent();
         if (OnDeactivate == null)
             OnDeactivate = new UnityEvent();
+        source.volume = source.volume * ((float)PlayerPrefs.GetInt("Volume", 10) / 10.0f);
+
     }
 
     bool animating = false;

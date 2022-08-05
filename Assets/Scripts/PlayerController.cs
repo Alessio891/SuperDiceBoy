@@ -22,11 +22,15 @@ public class PlayerController : MonoBehaviour
     public LayerMask EnemyLayer;
     bool JumpedOnEnemy = false;
     public float KickForce = 30.0f;
-    public ParticleSystem KickSfx;
+    public ParticleSystem KickSfx, DeathSfx;
     public int PlayerIndex = 0;
     float oldTrigger = 0;
     CharacterController2D charController;
     public System.Action<float> OnThrowDie = (f) => { };
+
+    public bool Resetting = false;
+
+    public static bool SinglePlayer => Player2 == null;
 
     public int CurrentNumber
     {
@@ -67,27 +71,45 @@ public class PlayerController : MonoBehaviour
         ChargeBar.fillAmount = 0;
         Canvas.SetActive(false);        
     }
+    IEnumerator resetRoutine()
+    {        
+        CameraController.instance.ToggleCloser();
+        Resetting = true;
+        Vector3 pos = charController.LastGroundPosition;
+        SpriteRenderer s = GetComponent<SpriteRenderer>();
+        charController.m_Rigidbody2D.simulated = false;
+        s.enabled = false;
+        ParticleSystem d = GameObject.Instantiate<ParticleSystem>(DeathSfx);
+        d.transform.position = transform.position;
+        yield return new WaitForSeconds(1.5f);
+        transform.position = pos;// charController.LastGroundPosition;
+        charController.m_Rigidbody2D.simulated = true;
+        charController.m_Rigidbody2D.velocity = Vector2.zero;
+        s.enabled = true;
+        CameraController.instance.ToggleCloser();
+        /* RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.up + Vector3.right, Vector3.down, 5.0f, LayerMask.GetMask("Floor"));
+         if (hit.collider == null)
+         {
+             charController.LastGroundPosition = transform.position - transform.right;
+             ResetToLastPosition();
+             yield break;
+         }
+         hit = Physics2D.Raycast(transform.position + Vector3.up - Vector3.right, Vector3.down, 5.0f, LayerMask.GetMask("Floor"));
+         if (hit.collider == null)
+         {
+             charController.LastGroundPosition = transform.position + transform.right;
+             ResetToLastPosition();
+             yield break;
+         }*/
+        Resetting = false;
 
+        yield return null;
+    }
     public void ResetToLastPosition()
     {
-        transform.position = charController.LastGroundPosition;
-        charController.m_Rigidbody2D.velocity = Vector2.zero;
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.up + Vector3.right, Vector3.down, 5.0f, LayerMask.GetMask("Floor"));
-        if (hit.collider == null)
-        {
-            charController.LastGroundPosition = transform.position - transform.right;
-            ResetToLastPosition();
+        if (Resetting)
             return;
-        }
-        hit = Physics2D.Raycast(transform.position + Vector3.up - Vector3.right, Vector3.down, 5.0f, LayerMask.GetMask("Floor"));
-        if (hit.collider == null)
-        {
-            charController.LastGroundPosition = transform.position + transform.right;
-            ResetToLastPosition();
-            return;
-        }
-
+        StartCoroutine(resetRoutine());        
 
     }
 
